@@ -9,6 +9,7 @@ canvasStyle.imageRendering = "-webkit-optimize-contrast";
 canvasStyle.imageRendering = "optimize-contrast";
 canvasStyle.imageRendering = "crisp-edges";
 canvasStyle.imageRendering = "pixelated";
+
 // start at 0 : now = 0
 // save at 10 : now = 10
 // load at 50 : now = 10 = realNow - (loadTime - saveTime)
@@ -47,6 +48,8 @@ function maybeSaveState() {
     }
 }
 
+var gamecip_ResetGFX = null;
+
 function maybeLoadState() {
     if(awaitingLoadCallback) {
         assert(awaitingLoadState);
@@ -66,20 +69,7 @@ function maybeLoadState() {
         var s = awaitingLoadState;
         awaitingLoadState = null;
         cb(s);
-        resetGFX();
+        gamecip_ResetGFX();
         return true;
     }
-}
-
-var resetGFX;
-window['initSaveLoadState'] = function() {
-    resetGFX = Module.cwrap("gamecip_GFX_ResetScreen", "void", []);
-    var realHandle = EmterpreterAsync.handle;
-    EmterpreterAsync.handle = function(doAsyncOp, yieldDuring) {
-        if(EmterpreterAsync.state === 0) {
-            maybeSaveState();
-            maybeLoadState();
-        }
-        realHandle(doAsyncOp, yieldDuring);
-    };
 }
