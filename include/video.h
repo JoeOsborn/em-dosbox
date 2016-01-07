@@ -60,6 +60,7 @@ Bitu GFX_GetBestMode(Bitu flags);
 Bitu GFX_GetRGB(Bit8u red,Bit8u green,Bit8u blue);
 Bitu GFX_SetSize(Bitu width,Bitu height,Bitu flags,double scalex,double scaley,GFX_CallBack_t cb);
 
+extern "C" void gamecip_GFX_ResetScreen(void);
 void GFX_ResetScreen(void);
 void GFX_Start(void);
 void GFX_Stop(void);

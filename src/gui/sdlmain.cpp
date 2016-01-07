@@ -521,7 +521,9 @@ check_gotbpp:
 	return flags;
 }
 
-
+extern "C" void gamecip_GFX_ResetScreen(void) {
+  GFX_ResetScreen();
+}
 void GFX_ResetScreen(void) {
 	GFX_Stop();
 	if (sdl.draw.callback)

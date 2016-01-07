@@ -1,0 +1,19 @@
+<!-- Insert me before the /body -->
+          <script>
+          window.addEventListener("load", function() {
+          initSaveLoadState();
+          })
+          var saved;
+          function testSave() {
+              console.log("let's save");
+              saveState(function(s){ console.log("Saved",s,Date.now()); saved=s; });
+          }
+          function testLoad() {
+              if(!saved) { return; }
+              console.log("let's load",saved);
+              loadState(saved,function(s) { console.log("Loaded",s,Date.now()); });
+          }
+          
+          </script>
+          <a onClick="testSave();">Save State</a>
+          <a onClick="testLoad();">Load State</a>
