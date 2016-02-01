@@ -22,7 +22,7 @@ AS_IF([test "x$enable_emscripten" = "xyes"],
       [host_alias=none
        : ${CXXFLAGS="-O3"}
        : ${CFLAGS="-O3"}
-       ac_cv_exeext=.html])
+       ac_cv_exeext=.js])
 
 dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST

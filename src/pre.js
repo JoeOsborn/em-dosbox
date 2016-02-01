@@ -73,3 +73,41 @@ function maybeLoadState() {
         return true;
     }
 }
+
+//todo: save extra files
+
+Module.arguments = (Module.gameFile.match(/\.(exe|com|bat)$/i) ? 
+    [Module.gameFile] : 
+    ["-c", "mount a .", "-c", "boot a:" + Module.gameFile + ""]);
+
+Module.preRun.push(function() {
+    var freezeFile = Module["freezeFile"];
+    var extraFiles = Module["extraFiles"] || {};
+    if(freezeFile) {
+        Module.postRun.push(function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== XMLHttpRequest.DONE) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    return;
+                }
+                loadState(xhr.response, function(s) { console.log("DOSBOX loaded state " +freezeFile); });
+            };
+            xhr.open('GET', freezeFile, true);
+            xhr.responseType = 'arraybuffer';
+            xhr.send(null);
+        })
+    }
+    for(k in extraFiles) {
+        if(extraFiles.hasOwnProperty(k)) {
+            var targetPath = k;
+            var lastSlash = k.lastIndexOf("/");
+            var targetBase = (lastSlash == -1) ? "/" : k.slice(0,lastSlash+1);
+            var targetName = k.slice(lastSlash+1);
+            var srcPath = extraFiles[k];
+            FS.createPreloadedFile(targetBase, targetName, srcPath, true, true);
+        }
+    }
+});
