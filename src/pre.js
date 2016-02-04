@@ -21,15 +21,36 @@ Date.now = function() { //game time
 }
 
 var awaitingSaveCallback; // State -> void
-window['saveState'] = function(onSaved) {
+Module['saveState'] = function(onSaved) {
     awaitingSaveCallback = onSaved;
 }
 var awaitingLoadCallback; // State -> void
 var awaitingLoadState; // State
-window['loadState'] = function(s, onLoaded) {
+Module['loadState'] = function(s, onLoaded) {
     awaitingLoadState = s;
     awaitingLoadCallback = onLoaded;
 }
+
+Module['setMuted'] = function(b) {
+    gamecip_PauseAudio(b ? 1 : 0);
+    Module._isMuted = b;
+}
+
+Module['isMuted'] = function() {
+    return Module._isMuted;
+}
+
+Module['saveExtraFiles'] = function(files, onSaved) {
+    if(onSaved) {
+        var r = {};
+        for(var i = 0; i < files.length; i++) {
+            r[files[i]] = FS.readFile(files[i], {encoding:'binary'});
+        }
+        onSaved(r);
+    }
+}
+
+//todo: save extra files
 
 function maybeSaveState() {
     if(awaitingSaveCallback) {
@@ -74,13 +95,12 @@ function maybeLoadState() {
     }
 }
 
-//todo: save extra files
-
 Module.arguments = (Module.gameFile.match(/\.(exe|com|bat)$/i) ? 
     [Module.gameFile] : 
     ["-c", "mount a .", "-c", "boot a:" + Module.gameFile + ""]);
 
 Module.preRun.push(function() {
+    ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = Module.targetID;
     var freezeFile = Module["freezeFile"];
     var extraFiles = Module["extraFiles"] || {};
     if(freezeFile) {
@@ -110,4 +130,8 @@ Module.preRun.push(function() {
             FS.createPreloadedFile(targetBase, targetName, srcPath, true, true);
         }
     }
+});
+
+Module.postRun.push(function() {
+    Module.setMuted(true);
 });

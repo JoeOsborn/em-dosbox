@@ -521,6 +521,12 @@ check_gotbpp:
 	return flags;
 }
 
+extern "C" void gamecip_PauseAudio(int)  __attribute__((used));
+extern "C" void gamecip_PauseAudio(int n) {
+  SDL_PauseAudio(n);
+}
+
+extern "C" void gamecip_GFX_ResetScreen(void)  __attribute__((used));
 extern "C" void gamecip_GFX_ResetScreen(void) {
   GFX_ResetScreen();
 }
@@ -1566,7 +1572,8 @@ Bitu GFX_GetRGB(Bit8u red,Bit8u green,Bit8u blue) {
 			return (u << 0) | (y << 8) | (v << 16) | (y << 24);
 #endif
 		}
-#endif /* !EMSCRIPTEN */
+#endif /* !EMSCRIPT
+		EN */
 #endif	// !SDL_VERSION_ATLEAST(2,0,0)
 	case SCREEN_OPENGL:
 		//USE BGRA otherwise
