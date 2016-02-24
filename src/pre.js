@@ -50,6 +50,30 @@ Module['saveExtraFiles'] = function(files, onSaved) {
     }
 }
 
+function enumerateDirectory(path, files) {
+    var dir = FS.lookupPath(path);
+    var node = dir.node;
+    var contents = node.contents;
+    var slashIncluded = path[path.length-1] == "/";
+    var joiner = (slashIncluded ? "" : "/");
+    for(var k in contents) {
+        if(k == "dev" || k == "home" || k == "proc" || k == "tmp") {
+            continue;
+        }
+        var file = contents[k];
+        if(FS.isDir(file.mode)) {
+            enumerateDirectory(path+joiner+file.name, files);
+        } else {
+            files.push(path+joiner+file.name);
+        }
+    }
+    return files;
+}
+
+Module['listExtraFiles'] = function() {
+    return enumerateDirectory("/",[]);
+}
+
 //todo: save extra files
 
 function maybeSaveState() {
