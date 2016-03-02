@@ -20,15 +20,17 @@ Date.now = function() { //game time
     return gcip_realNow() - loadedTime + savedTime;
 }
 
-var awaitingSaveCallback; // State -> void
-Module['saveState'] = function(onSaved) {
+var awaitingSaveCallback, awaitingSaveErrorCallback; // State -> void
+Module['saveState'] = function(onSaved, onError) {
     awaitingSaveCallback = onSaved;
+    awaitingSaveErrorCallback = onError;
 }
-var awaitingLoadCallback; // State -> void
+var awaitingLoadCallback, awaitingLoadErrorCallback; // State -> void
 var awaitingLoadState; // State
-Module['loadState'] = function(s, onLoaded) {
+Module['loadState'] = function(s, onLoaded, onError) {
     awaitingLoadState = s;
     awaitingLoadCallback = onLoaded;
+    awaitingLoadErrorCallback = onError;
 }
 
 Module['setMuted'] = function(b) {
@@ -40,13 +42,17 @@ Module['isMuted'] = function() {
     return Module._isMuted;
 }
 
-Module['saveExtraFiles'] = function(files, onSaved) {
-    if(onSaved) {
-        var r = {};
-        for(var i = 0; i < files.length; i++) {
-            r[files[i]] = FS.readFile(files[i], {encoding:'binary'});
+Module['saveExtraFiles'] = function(files, onSaved, onError) {
+    try {
+        if(onSaved) {
+            var r = {};
+            for(var i = 0; i < files.length; i++) {
+                r[files[i]] = FS.readFile(files[i], {encoding:'binary'});
+            }
+            onSaved(r);
         }
-        onSaved(r);
+    } catch(e) {
+        if(onError) { onError(files, e); }
     }
 }
 
@@ -78,6 +84,7 @@ Module['listExtraFiles'] = function() {
 
 function maybeSaveState() {
     if(awaitingSaveCallback) {
+        try {
         console.log("State",EmterpreterAsync.state);
         assert(Module.buffer);
         //store current time and heap
@@ -90,12 +97,18 @@ function maybeSaveState() {
         var cb = awaitingSaveCallback;
         awaitingSaveCallback = null;
         cb(state);
+        } catch(e) {
+            if(awaitingSaveErrorCallback) {
+                awaitingSaveErrorCallback(e);
+            }
+        }
     }
 }
 
 var gamecip_ResetGFX = null;
 
 function maybeLoadState() {
+    try {
     if(awaitingLoadCallback) {
         assert(awaitingLoadState);
         loadedTime = gcip_realNow(); //wallclock time
@@ -116,6 +129,11 @@ function maybeLoadState() {
         cb(s);
         gamecip_ResetGFX();
         return true;
+    }
+    } catch(e) {
+        if(awaitingLoadErrorCallback) {
+            awaitingLoadErrorCallback(awaitingLoadState,e);
+        }
     }
 }
 
