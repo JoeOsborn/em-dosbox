@@ -80,7 +80,12 @@ Module['listExtraFiles'] = function() {
     return enumerateDirectory("/",[]);
 }
 
-//todo: save extra files
+Module['quit'] = function() {
+    Module.noExitRuntime = false;
+    try { Module.exit(0,false); }
+    catch(e) { }
+    Module.canvas.remove();
+}
 
 function maybeSaveState() {
     if(awaitingSaveCallback) {
