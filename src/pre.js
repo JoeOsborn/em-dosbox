@@ -14,6 +14,8 @@ canvasStyle.imageRendering = "pixelated";
 // save at 10 : now = 10
 // load at 50 : now = 10 = realNow - (loadTime - saveTime)
 
+//TODO: fix this time junk so it doesn't clobber global date.now and break modularization!!
+
 var loadedTime = 0, savedTime = 0; //wallclock time and game time, respectively
 var gcip_realNow = Date.now; //wallclock time
 Date.now = function() { //game time
@@ -147,6 +149,12 @@ Module.arguments = (Module.gameFile.match(/\.(exe|com|bat)$/i) ?
     ["-c", "mount a .", "-c", "boot a:" + Module.gameFile + ""]);
 
 Module.preRun.push(function() {
+    Module["getAudioCaptureInfo"] = function() {
+        return {
+            context:SDL2.audioContext,
+            capturedNode:SDL2.audio.scriptProcessorNode
+        };
+    }
     ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = Module.targetID;
     var freezeFile = Module["freezeFile"];
     var extraFiles = Module["extraFiles"] || {};
@@ -177,8 +185,4 @@ Module.preRun.push(function() {
             FS.createPreloadedFile(targetBase, targetName, srcPath, true, true);
         }
     }
-});
-
-Module.postRun.push(function() {
-    Module.setMuted(true);
 });
