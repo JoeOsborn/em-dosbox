@@ -113,6 +113,7 @@ function maybeSaveState() {
 }
 
 var gamecip_ResetGFX = null;
+var gamecip_ResetLastTick = null;
 
 function maybeLoadState() {
     try {
@@ -134,6 +135,7 @@ function maybeLoadState() {
         var s = awaitingLoadState;
         awaitingLoadState = null;
         cb(s);
+        gamecip_ResetLastTick();
         gamecip_ResetGFX();
         return true;
     }

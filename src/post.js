@@ -1,4 +1,5 @@
 gamecip_ResetGFX = Module.cwrap("gamecip_GFX_ResetScreen", "void", []);
+gamecip_ResetLastTick = Module.cwrap("gamecip_ResetLastTick", "void", []);
 gamecip_PauseAudio = Module.cwrap("gamecip_PauseAudio", null, ["number"]);
 (function() {
     var realHandle = EmterpreterAsync.handle;

@@ -24,6 +24,7 @@
 
 GCC_ATTRIBUTE(noreturn) void E_Exit(const char * message,...) GCC_ATTRIBUTE( __format__(__printf__, 1, 2));
 
+extern "C" void gamecip_ResetLastTick(void);
 #ifdef EMSCRIPTEN
 void em_exit(int exitarg);
 #endif
