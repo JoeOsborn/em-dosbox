@@ -158,25 +158,34 @@ Module.preRun.push(function() {
         };
     }
     ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = Module.targetID;
-    var freezeFile = Module["freezeFile"];
+    //var freezeFile = Module["freezeFile"];
+    var freezeData = Module["freezeData"];
     var extraFiles = Module["extraFiles"] || {};
-    if(freezeFile) {
-        Module.postRun.push(function() {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState !== XMLHttpRequest.DONE) {
-                    return;
-                }
-                if (xhr.status !== 200) {
-                    return;
-                }
-                loadState(xhr.response, function(s) { console.log("DOSBOX loaded state " +freezeFile); });
-            };
-            xhr.open('GET', freezeFile, true);
-            xhr.responseType = 'arraybuffer';
-            xhr.send(null);
-        })
+    // Leaving in case we want to use it again, for now though there is no direct save state file for DOSBox
+    // if(freezeFile) {
+    //     Module.postRun.push(function() {
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.onreadystatechange = function () {
+    //             if (xhr.readyState !== XMLHttpRequest.DONE) {
+    //                 return;
+    //             }
+    //             if (xhr.status !== 200) {
+    //                 return;
+    //             }
+    //             Module["loadState"](xhr.response, function(s) { console.log("DOSBOX loaded state " +freezeFile); });
+    //         };
+    //         xhr.open('GET', freezeFile, true);
+    //         xhr.responseType = 'arraybuffer';
+    //         xhr.send(null);
+    //     })
+    // }
+    if(freezeData){
+        Module.postRun.push(function(){
+            Module["loadState"](freezeData, function(s) {console.log("DOSBOX loaded state from freeze data.")})
+        });
     }
+
+
     for(k in extraFiles) {
         if(extraFiles.hasOwnProperty(k)) {
             var targetPath = k;
