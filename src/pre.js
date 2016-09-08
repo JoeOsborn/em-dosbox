@@ -193,6 +193,10 @@ Module.preRun.push(function() {
             var targetBase = (lastSlash == -1) ? "/" : k.slice(0,lastSlash+1);
             var targetName = k.slice(lastSlash+1);
             var srcPath = extraFiles[k];
+						//creates path if needed, else ignores, createPreloadedFile DOES NOT create paths for some reason
+						if(targetBase !== "/"){
+							FS.createPath("/", targetBase.slice(1), true, true) //parent is always "/" in this case
+						}
             FS.createPreloadedFile(targetBase, targetName, srcPath, true, true);
         }
     }
