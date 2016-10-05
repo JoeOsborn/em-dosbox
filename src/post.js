@@ -1,5 +1,7 @@
 gamecip_ResetGFX = Module.cwrap("gamecip_GFX_ResetScreen", "void", []);
 gamecip_PauseAudio = Module.cwrap("gamecip_PauseAudio", null, ["number"]);
+gamecip_ram_ptr = Module.cwrap("gamecip_ram_ptr", "number", []);
+gamecip_mem_totalpages = Module.cwrap("MEM_TotalPages", "number", []);
 (function() {
     var realHandle = EmterpreterAsync.handle;
     EmterpreterAsync.handle = function(doAsyncOp, yieldDuring) {

@@ -55,6 +55,7 @@
 #include "cpu.h"
 #include "cross.h"
 #include "control.h"
+#include "mem.h"
 
 #define MAPPERFILE "mapper-" VERSION ".map"
 //#define DISABLE_JOYSTICK
@@ -519,6 +520,11 @@ check_gotbpp:
 		break;
 	}
 	return flags;
+}
+
+extern "C" unsigned char * gamecip_ram_ptr(void) __attribute__((used));
+extern "C" unsigned char * gamecip_ram_ptr(void) {
+  return MemBase;
 }
 
 extern "C" void gamecip_PauseAudio(int)  __attribute__((used));

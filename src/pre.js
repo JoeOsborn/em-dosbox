@@ -186,3 +186,20 @@ Module.preRun.push(function() {
         }
     }
 });
+
+/*
+gamecip_ram_ptr = Module.cwrap("gamecip_ram_ptr", "number", []);
+gamecip_mem_totalpages = Module.cwrap("MEM_TotalPages", "number", []);
+*/
+Module["getMemoryRegions"] = function() {
+    return {
+        RAM:{size:gamecip_mem_totalpages()*4096}
+    };
+}
+Module["getBytes"] = function(regionPath,offset,count) {
+    if(regionPath == "RAM" ||
+       (regionPath.length == 0 && regionPath[0] == "RAM")) {
+        return new Uint8Array(Module.HEAPU8.buffer, gamecip_ram_ptr()+offset, count);
+    }
+    return null;
+}
