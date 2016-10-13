@@ -522,6 +522,10 @@ check_gotbpp:
 	return flags;
 }
 
+extern "C" Bitu gamecip_mem_pages(void) __attribute__((used));
+extern "C" Bitu gamecip_mem_pages(void) {
+  return MEM_TotalPages();
+}
 extern "C" unsigned char * gamecip_ram_ptr(void) __attribute__((used));
 extern "C" unsigned char * gamecip_ram_ptr(void) {
   return MemBase;
