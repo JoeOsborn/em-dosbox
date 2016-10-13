@@ -136,6 +136,13 @@ Bit32s ticksDone;
 Bit32u ticksScheduled;
 bool ticksLocked;
 
+/* External function to reset ticksLast on state load */
+#ifdef EMSCRIPTEN
+extern "C" void gamecip_ResetLastTick(void){
+	ticksLast = 0;
+}
+#endif
+
 #ifdef EMSCRIPTEN
 #ifdef EMTERPRETER_SYNC
 int nosleep_lock = 0;

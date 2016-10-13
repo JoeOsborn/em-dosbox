@@ -20,9 +20,9 @@ EXTRA_DIST = winres.rc dosbox.ico
 if EMSCRIPTEN_BUILD
 dosbox_LDFLAGS=-s TOTAL_MEMORY=134217728 -s ALLOW_MEMORY_GROWTH=0 --pre-js pre.js --post-js post.js
 EXTRA_dosbox_DEPENDENCIES=pre.js post.js
-CLEANFILES=dosbox.js dosbox.html.mem dosbox.js.orig.js dosbox.js.tmp.js
+CLEANFILES=dosbox.js dosbox.js.mem dosbox.html.mem dosbox.js.orig.js dosbox.js.tmp.js
 if EMTERPRETER
-dosbox_LDFLAGS+=-s EXPORTED_FUNCTIONS="['_main', '_gamecip_GFX_ResetScreen', '_gamecip_ram_ptr', '_gamecip_mem_pages']" -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s EMTERPRETIFY_WHITELIST=@emterpretify.txt -s MODULARIZE=1 -s EXPORT_NAME=\'"DOSBOX"\' -s EXTRA_EXPORTED_RUNTIME_METHODS='["FS"]'
+dosbox_LDFLAGS+=-s EXPORTED_FUNCTIONS="['_main', '_gamecip_GFX_ResetScreen', '_gamecip_ResetLastTick', '_gamecip_ram_ptr', '_gamecip_mem_pages']" -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1 -s EMTERPRETIFY_WHITELIST=@emterpretify.txt -s MODULARIZE=1 -s EXPORT_NAME=\'"DOSBOX"\' -s EXTRA_EXPORTED_RUNTIME_METHODS='["FS"]'
 EXTRA_dosbox_DEPENDENCIES+=emterpretify.txt
 else
 # Memory init file is huge and it doesn't save bandwith even if using gzip.

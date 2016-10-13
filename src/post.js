@@ -1,4 +1,5 @@
 gamecip_ResetGFX = Module.cwrap("gamecip_GFX_ResetScreen", "void", []);
+gamecip_ResetLastTick = Module.cwrap("gamecip_ResetLastTick", "void", []);
 gamecip_PauseAudio = Module.cwrap("gamecip_PauseAudio", null, ["number"]);
 gamecip_ram_ptr = Module.cwrap("gamecip_ram_ptr", "number", []);
 gamecip_mem_totalpages = Module.cwrap("gamecip_mem_pages", "number", []);
