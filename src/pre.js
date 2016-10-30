@@ -156,7 +156,8 @@ Module.preRun.push(function() {
             context:SDL2.audioContext,
             capturedNode:SDL2.audio.scriptProcessorNode
         };
-    }
+    };
+    Module["JSEvents"] = JSEvents;
     ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = Module.targetID;
     //var freezeFile = Module["freezeFile"];
     var freezeData = Module["freezeData"];

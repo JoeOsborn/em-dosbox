@@ -16,7 +16,15 @@ gamecip_mem_totalpages = Module.cwrap("gamecip_mem_pages", "number", []);
 
 Browser.resizeListeners.push(
     function() {
-        Module.canvas.style.setProperty( "width", "inherit", "important");
-        Module.canvas.style.setProperty("height", "inherit", "important");
+        if('enforcedWidth' in Module){
+            Module.canvas.style.setProperty("width", Module.enforcedWidth, "important");
+        }else{
+            Module.canvas.style.setProperty( "width", "inherit", "important");
+        }
+        if('enforcedHeight' in Module){
+            Module.canvas.style.setProperty("height", Module.enforcedHeight, "important");
+        }else{
+            Module.canvas.style.setProperty("height", "inherit", "important");
+        }
     }
 );
